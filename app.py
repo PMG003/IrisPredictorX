@@ -30,9 +30,10 @@ with col2:
 
 # Prediction
 if st.button("🌼 Predict Species"):
-    input_features = pd.DataFrame([[
-        sepal_length, sepal_width, petal_width, species_encoded
-    ]], columns=['SepalLengthCm', 'SepalWidthCm', 'PetalWidthCm', 'Species'])
+       input_features = pd.DataFrame([[
+        sepal_length, sepal_width, petal_width
+    ]], columns=['SepalLengthCm', 'SepalWidthCm', 'PetalWidthCm'])
+
 
     prediction = model.predict(input_features)[0]
 
