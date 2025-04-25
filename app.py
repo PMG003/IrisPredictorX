@@ -12,7 +12,7 @@ Provide the flower's characteristics below and get an instant prediction!
 """)
 
 # Load the trained model
-with open('random_forest_classifier.pkl', 'rb') as model_file:
+with open('xgboost_regressor_model.pkl', 'rb') as model_file:
     model = pickle.load(model_file)
 
 # Define feature input sliders
