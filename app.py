@@ -3,45 +3,45 @@ import pandas as pd
 import numpy as np
 import pickle
 
-# App Title and Description
+# App Configuration
 st.set_page_config(page_title="🌸 Iris Species Classifier", layout="centered")
 st.title("🌸 Iris Species Classifier")
 st.markdown("""
-Predict the species of an Iris flower using a trained Machine Learning model (Random Forest Classifier).
-Provide the flower's characteristics below and get an instant prediction!
+Predict the species of an Iris flower using a trained Machine Learning model (Random Forest or XGBoost Classifier).
+Fill in the flower's measurements and click the button to see the prediction.
 """)
 
 # Load the trained model
 with open('xgboost_regressor_model.pkl', 'rb') as model_file:
     model = pickle.load(model_file)
 
-# Define feature input sliders
-st.subheader("Enter Flower Details")
-
+# Input Features
+st.subheader("🌿 Input Flower Features")
 col1, col2 = st.columns(2)
 
 with col1:
-    sepal_length = st.slider("Sepal Length (cm)", min_value=4.0, max_value=8.0, value=5.8, step=0.1)
-    sepal_width = st.slider("Sepal Width (cm)", min_value=2.0, max_value=4.5, value=3.0, step=0.1)
+    sepal_length = st.slider("Sepal Length (cm)", 4.0, 8.0, 5.8, 0.1)
+    sepal_width = st.slider("Sepal Width (cm)", 2.0, 4.5, 3.0, 0.1)
 
 with col2:
-    petal_width = st.slider("Petal Width (cm)", min_value=0.1, max_value=2.5, value=1.0, step=0.1)
-    species_encoded = st.selectbox("Species Encoded", [0, 1, 2], help="Use values as per label encoding")
+    petal_length = st.slider("Petal Length (cm)", 1.0, 7.0, 4.0, 0.1)
+    petal_width = st.slider("Petal Width (cm)", 0.1, 2.5, 1.0, 0.1)
 
 # Prediction
 if st.button("🌼 Predict Species"):
-    input_features = pd.DataFrame([[
-        sepal_length, sepal_width, petal_width
-    ]], columns=['SepalLengthCm', 'SepalWidthCm', 'PetalWidthCm'])
+    input_data = pd.DataFrame([[
+        sepal_length, sepal_width, petal_length, petal_width
+    ]], columns=['SepalLengthCm', 'SepalWidthCm', 'PetalLengthCm', 'PetalWidthCm'])
 
-    prediction = model.predict(input_features)[0]
+    # Make prediction
+    try:
+        prediction = model.predict(input_data)[0]
+        species_map = {0: "Iris-setosa", 1: "Iris-versicolor", 2: "Iris-virginica"}
+        predicted_species = species_map.get(prediction, "Unknown")
 
-    # Reverse mapping of label if needed
-    species_map = {0: "Iris-setosa", 1: "Iris-versicolor", 2: "Iris-virginica"}
-    predicted_species = species_map.get(prediction, "Unknown")
-
-    st.success(f"🌟 Predicted Species: **{predicted_species}**")
-    st.caption("Note: Model trained using Random Forest Classifier on the Iris dataset.")
+        st.success(f"🌟 Predicted Species: **{predicted_species}**")
+    except Exception as e:
+        st.error(f"⚠️ Error during prediction: {str(e)}")
 
 # Footer
 st.markdown("---")
