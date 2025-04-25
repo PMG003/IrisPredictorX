@@ -30,10 +30,9 @@ with col2:
 
 # Prediction
 if st.button("🌼 Predict Species"):
-       input_features = pd.DataFrame([[
+    input_features = pd.DataFrame([[
         sepal_length, sepal_width, petal_width
     ]], columns=['SepalLengthCm', 'SepalWidthCm', 'PetalWidthCm'])
-
 
     prediction = model.predict(input_features)[0]
 
@@ -42,7 +41,6 @@ if st.button("🌼 Predict Species"):
     predicted_species = species_map.get(prediction, "Unknown")
 
     st.success(f"🌟 Predicted Species: **{predicted_species}**")
-
     st.caption("Note: Model trained using Random Forest Classifier on the Iris dataset.")
 
 # Footer
