@@ -7,13 +7,17 @@ import pickle
 st.set_page_config(page_title="🌸 Iris Species Classifier", layout="centered")
 st.title("🌸 Iris Species Classifier")
 st.markdown("""
-Predict the species of an Iris flower using a trained Machine Learning model (Random Forest or XGBoost Classifier).
+Predict the species of an Iris flower using a trained Machine Learning model (Random Forest Classifier).
 Fill in the flower's measurements and click the button to see the prediction.
 """)
 
 # Load the trained model
-with open('xgboost_regressor_model.pkl', 'rb') as model_file:
-    model = pickle.load(model_file)
+@st.cache_resource
+def load_model():
+    with open('iris_rf_model.pkl', 'rb') as model_file:
+        return pickle.load(model_file)
+
+model = load_model()
 
 # Input Features
 st.subheader("🌿 Input Flower Features")
@@ -27,13 +31,12 @@ with col2:
     petal_length = st.slider("Petal Length (cm)", 1.0, 7.0, 4.0, 0.1)
     petal_width = st.slider("Petal Width (cm)", 0.1, 2.5, 1.0, 0.1)
 
-# Prediction
+# Predict Button
 if st.button("🌼 Predict Species"):
     input_data = pd.DataFrame([[
         sepal_length, sepal_width, petal_length, petal_width
-    ]], columns=['SepalLengthCm', 'SepalWidthCm', 'PetalLengthCm', 'PetalWidthCm'])
+    ]], columns=['sepal length (cm)', 'sepal width (cm)', 'petal length (cm)', 'petal width (cm)'])
 
-    # Make prediction
     try:
         prediction = model.predict(input_data)[0]
         species_map = {0: "Iris-setosa", 1: "Iris-versicolor", 2: "Iris-virginica"}
